@@ -1,7 +1,7 @@
 /**
- * Heapsort has two possible implementations depending on the type of the
- * iterators. It uses O(k) space if the iterators are random access and O(n)
- * space otherwise.
+ * Heapsort has two implementations depending on the type of the * iterators.
+ * It uses O(k) space if the iterators are random access and O(n) space
+ * otherwise.
 */
 
 #ifndef GUARD_HEAPSORT_HPP

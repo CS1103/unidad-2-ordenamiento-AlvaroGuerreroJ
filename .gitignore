@@ -1,4 +1,8 @@
-.idea/
-.vs/
-cmake-build-debug/
-out/
+# Scons
+.sconsign.dblite
+
+# VS Code
+.vscode
+
+# Build files
+/build

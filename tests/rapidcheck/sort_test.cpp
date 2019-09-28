@@ -5,7 +5,7 @@
 
 #include <rapidcheck.h>
 
-#include <sort.hpp>
+#include <include/sort.hpp>
 
 using std::list;
 using std::string;
@@ -27,6 +27,13 @@ int main()
                   vc.sort();
                   RC_ASSERT(v == vc);
               });
+    rc::check("mergesort with vector<int> and custom cmp function",
+              [](vector<int> v) {
+                  vector<int> vc(v);
+                  mergesort(v.begin(), v.end(), [](int l, int r){return r < l;});
+                  std::sort(vc.rbegin(), vc.rend());
+                  RC_ASSERT(v == vc);
+              });
 
     rc::check("insertionsort with vector<string>",
               [](vector<string> v) {
@@ -42,11 +49,25 @@ int main()
                   vc.sort();
                   RC_ASSERT(v == vc);
               });
+    rc::check("insertionsort with vector<int> and custom cmp function",
+              [](vector<int> v) {
+                  vector<int> vc(v);
+                  insertionsort(v.begin(), v.end(), [](int l, int r){return r < l;});
+                  std::sort(vc.rbegin(), vc.rend());
+                  RC_ASSERT(v == vc);
+              });
 
 
     rc::check("quicksort with vector<int>",
               [](vector<int> v) {
                   vector<int> vc(v);
+                  quicksort(v.begin(), v.end());
+                  std::sort(vc.begin(), vc.end());
+                  RC_ASSERT(v == vc);
+              });
+    rc::check("quicksort with vector<string>",
+              [](vector<string> v) {
+                  vector<string> vc(v);
                   quicksort(v.begin(), v.end());
                   std::sort(vc.begin(), vc.end());
                   RC_ASSERT(v == vc);
@@ -58,6 +79,14 @@ int main()
                   vc.sort();
                   RC_ASSERT(v == vc);
               });
+    rc::check("quicksort with vector<int> and custom cmp function",
+              [](vector<int> v) {
+                  vector<int> vc(v);
+                  quicksort(v.begin(), v.end(), [](int l, int r){return r < l;});
+                  std::sort(vc.rbegin(), vc.rend());
+                  RC_ASSERT(v == vc);
+              });
+
 
     rc::check("heapsort with vector<int>",
               [](vector<int> v) {
@@ -86,6 +115,20 @@ int main()
                   vector<int> vc(v);
                   shellsort(v.begin(), v.end());
                   std::sort(vc.begin(), vc.end());
+                  RC_ASSERT(v == vc);
+              });
+    rc::check("shellsort with vector<string>",
+              [](vector<string> v) {
+                  vector<string> vc(v);
+                  shellsort(v.begin(), v.end());
+                  std::sort(vc.begin(), vc.end());
+                  RC_ASSERT(v == vc);
+              });
+    rc::check("shellsort with vector<int> and custom cmp function",
+              [](vector<int> v) {
+                  vector<int> vc(v);
+                  shellsort(v.begin(), v.end(), [](int l, int r){return r < l;});
+                  std::sort(vc.rbegin(), vc.rend());
                   RC_ASSERT(v == vc);
               });
 }

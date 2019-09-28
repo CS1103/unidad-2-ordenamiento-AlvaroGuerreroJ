@@ -21,7 +21,7 @@ void quicksort(BidirectionalIter b, BidirectionalIter e,
     }
     if (count < insertionsort_threshold)
     {
-        insertionsort(b, e);
+        insertionsort(b, e, cmp);
         return;
     }
     // If got here, the range to be sorted is at least of size 8
@@ -60,24 +60,6 @@ void quicksort(BidirectionalIter b, BidirectionalIter e,
 
         return *gb_p1;
     }();
-
-    // At this point is true that: *gb <= pivot and pivot <= *ge
-
-    // if (*ge == pivot)
-    // {
-    //     BidirectionalIter new_ge = std::find_if(b, e,
-    //                                             [pivot](typename BidirectionalIter::value_type v)
-    //                                             {
-    //                                                 return pivot < v;
-    //                                             });
-    //     // If this is true, then the pivot was the largest element in the container
-    //     if (new_ge == e)
-    //     {
-    //         quicksort(b, ge);
-    //         return;
-    //     }
-    //     std::iter_swap(new_ge, ge);
-    // }
 
     // Invariant: *gb <= pivot // and pivot < *ge
     while (true)

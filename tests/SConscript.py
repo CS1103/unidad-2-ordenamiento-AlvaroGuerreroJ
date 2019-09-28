@@ -1,6 +1,11 @@
 # flake8: noqa
 
-Import('env')
+Import('base_env')
 
-SConscript('catch2/SConscript.py', exports='env')
-SConscript('rapidcheck/SConscript.py', exports='env')
+tests_env = base_env.Clone()
+
+tests_env['OBJPREFIX'] = tests_env['OBJPREFIX'] + 'tests/'
+tests_env['PROGPREFIX'] = tests_env['PROGPREFIX'] + 'tests/'
+
+SConscript('catch2/SConscript.py', exports='tests_env')
+SConscript('rapidcheck/SConscript.py', exports='tests_env')

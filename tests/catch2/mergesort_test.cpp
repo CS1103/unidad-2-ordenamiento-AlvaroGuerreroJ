@@ -2,7 +2,7 @@
 #include <vector>
 #include <catch2/catch.hpp>
 
-#include <sort.hpp>
+#include <include/sort.hpp>
 
 using std::list;
 using std::vector;

@@ -1,9 +1,11 @@
 # flake8: noqa
 
-env = Environment(CXX='clang++',
-                  CXXFLAGS=['-Werror', '-Wall', '-Wpedantic', '-Wextra', '-g'])
-env.Append(CPPPATH=['#/include'])
-env['OBJPREFIX'] = '#/build/obj/' + env['OBJPREFIX']
-env['PROGPREFIX'] = '#/build/' + env['PROGPREFIX']
+base_env = Environment(CXX='clang++',
+                       CXXFLAGS=['-Werror', '-Wall', '-Wpedantic', '-Wextra', '-g'])
+base_env.Append(CPPPATH=['#'])
+base_env['OBJPREFIX'] = '#/build/obj/' + base_env['OBJPREFIX']
+base_env['PROGPREFIX'] = '#/build/bin/' + base_env['PROGPREFIX']
+base_env['PROGSUFFIX'] = '.out'
 
-SConscript('tests/SConscript.py', exports='env')
+SConscript('src/SConscript.py', exports='base_env')
+SConscript('tests/SConscript.py', exports='base_env')
