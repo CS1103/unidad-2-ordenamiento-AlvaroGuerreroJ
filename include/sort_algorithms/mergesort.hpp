@@ -1,10 +1,11 @@
 #ifndef GUARD_MERGESORT_HPP
 #define GUARD_MERGESORT_HPP
 
+#include <algorithm>
+#include <deque>
 #include <functional>
 #include <iostream>
 #include <iterator>
-#include <queue>
 
 namespace
 {
@@ -12,7 +13,13 @@ namespace
     void merge_ranges(ForwardIter b0, ForwardIter b1, ForwardIter e1,
                       BinaryPred cmp)
     {
-        std::queue<typename ForwardIter::value_type> vanished_from_r0;
+        // This function is ugly. To avoid having to copy the range [b0, b1)
+        // a std::deque<ForwardIter> vanished_from_r0 is created. Thanks to
+        // that we reduce the storage cost (because ForwardIterator is
+        // probably smaller than ForwardIterator::value_type at the extent of
+        // some runtime performance.
+
+        std::deque<ForwardIter> vanished_from_r0;
         auto e0 = b1;
         while (b0 != e0)
         {
@@ -20,47 +27,59 @@ namespace
             {
                 if (cmp(*b1, *b0))
                 {
-                    vanished_from_r0.push(*b0);
-                    *b0 = *b1;
+                    std::iter_swap(b0, b1);
+                    vanished_from_r0.push_back(b1);
                     b1++;
                 }
             }
             else
             {
-                if (cmp(*b1, vanished_from_r0.front()))
+                if (cmp(*b1, *vanished_from_r0.front()))
                 {
-                    vanished_from_r0.push(*b0);
-                    *b0 = *b1;
+                    std::iter_swap(b0, b1);
+                    vanished_from_r0.push_back(b1);
                     b1++;
                 }
                 else
                 {
-                    vanished_from_r0.push(*b0);
-                    *b0 = vanished_from_r0.front();
-                    vanished_from_r0.pop();
+                    std::iter_swap(b0, vanished_from_r0.front());
+                    vanished_from_r0.push_back(vanished_from_r0.front());
+                    vanished_from_r0.pop_front();
                 }
             }
             b0++;
         }
+
         while (b1 != e1 && !vanished_from_r0.empty())
         {
-            if (cmp(*b1, vanished_from_r0.front()))
+            // I suspect this could be logarithmic as vanished_from_r0 is
+            // ordered in ascending order of dereference.
+            auto rp = std::find(vanished_from_r0.begin(),
+                                vanished_from_r0.end(), b0);
+
+            if (cmp(*b1, *vanished_from_r0.front()))
             {
-                *b0 = *b1;
+                std::iter_swap(b0, b1);
+                *rp = b1;
                 b1++;
             }
             else
             {
-                *b0 = vanished_from_r0.front();
-                vanished_from_r0.pop();
+                std::iter_swap(b0, vanished_from_r0.front());
+                *rp = vanished_from_r0.front();
+                vanished_from_r0.pop_front();
             }
             b0++;
         }
         while (!vanished_from_r0.empty())
         {
-            *b0 = vanished_from_r0.front();
+            auto rp = std::find(vanished_from_r0.begin(),
+                                vanished_from_r0.end(), b0);
+
+            std::iter_swap(b0, vanished_from_r0.front());
+            *rp = vanished_from_r0.front();
+            vanished_from_r0.pop_front();
             b0++;
-            vanished_from_r0.pop();
         }
         std::copy(b1, e1, b0);
     }
