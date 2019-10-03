@@ -13,6 +13,21 @@ using std::vector;
 
 int main()
 {
+    rc::check("sort with vector<int>",
+              [](vector<int> v) {
+                  vector<int> vc(v);
+                  ::sort(v.begin(), v.end());
+                  std::stable_sort(vc.begin(), vc.end());
+                  RC_ASSERT(v == vc);
+              });
+    rc::check("sort with list<string>",
+              [](list<int> v) {
+                  list<int> vc(v);
+                  ::sort(v.begin(), v.end());
+                  vc.sort();
+                  RC_ASSERT(v == vc);
+              });
+
     rc::check("mergesort with vector<int>",
               [](vector<int> v) {
                   vector<int> vc(v);
